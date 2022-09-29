@@ -9,5 +9,5 @@ class IconsManager {
   static const IconData list = Icons.format_list_bulleted_outlined;
   static const IconData edit = Icons.edit;
   static const IconData add = Icons.add;
-  static const IconData x = Icons.dangerous_outlined;
+  static const IconData x = Icons.close;
 }

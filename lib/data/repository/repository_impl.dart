@@ -104,7 +104,7 @@ class RepositoryApi implements Repository {
     if (await _networkInfo.isConnected) {
       try {
         final response = await _remoteDataSource.noteUpdate(noteUpdateRequest);
-        if (response == ApiInternalStatus.success_insert) {
+        if (response == ApiInternalStatus.success_update) {
           // success --> return either right --> return data
           return Right(response);
         } else {

@@ -12,10 +12,9 @@ import '../../utilm/toast_manager.dart';
 class NoteHomeViewModel extends BaseViewModel
     with NoteHomeViewModelInput, NoteHomeViewModelOutput {
   List<NoteModel> listModel = [];
+  List<NoteModel> listAllModel = [];
 
   // ========== streams ==========
-  final StreamController _listNotesSC =
-      StreamController<List<NoteModel>>.broadcast();
   final StreamController _stateSC = StreamController<StateType>.broadcast();
 
   final GetAllNotesUseCase getAllNotesUseCase;
@@ -39,29 +38,20 @@ class NoteHomeViewModel extends BaseViewModel
         print(notes[0].text);
         print(notes.length);
         listModel = notes;
-        inputListNotes.add(listModel);
+        listAllModel = notes;
       },
     );
   }
 
   @override
   void dispose() {
-    _listNotesSC.close();
     _stateSC.close();
   }
 
   // ========== streams ==========
-  @override
-  Sink get inputListNotes => _listNotesSC.sink;
 
   @override
   Sink get inputState => _stateSC.sink;
-
-  @override
-  Stream<List<NoteModel>> get outputListNotes => _listNotesSC.stream.map((l) {
-        print("l : $l");
-        return l;
-      });
 
   @override
   Stream<StateType> get outputState => _stateSC.stream.map((state) {
@@ -72,40 +62,45 @@ class NoteHomeViewModel extends BaseViewModel
   // ============ voids =============
   @override
   addNote() async {
-    NoteInsertUCInput note = NoteInsertUCInput("text", '101', "placeDateTime");
-    (await addNoteUseCase.execute(note)).fold(
-        (l) => ToastManager.toastOk(l.message),
-        (r) => ToastManager.toastOk(r));
+    NoteInsertUCInput note =
+        NoteInsertUCInput("text", '101', "2021-11-18T09:39:44");
+    (await addNoteUseCase.execute(note))
+        .fold((l) => ToastManager.toastOk(l.message), (r) {
+      ToastManager.toastOk(r);
+      _loadData();
+    });
   }
 
   @override
-  search(String key) {
-    // TODO: implement search
-    throw UnimplementedError();
+  searchByKey(String keySearch) {
+    listModel = listAllModel.where((note) {
+      String noteText = note.text.toLowerCase();
+      keySearch = keySearch.toLowerCase();
+      return noteText.contains(keySearch);
+    }).toList();
+    _stateSC.add(StateType.ok);
   }
 
   @override
-  setCurrentNote(NoteModel note) {
-    // TODO: implement setCurrentNote
-    throw UnimplementedError();
+  searchByUserId(String userId) {
+    listModel = listAllModel.where((note) {
+      return note.id == userId;
+    }).toList();
+    _stateSC.add(StateType.ok);
   }
 }
 
 abstract class NoteHomeViewModelInput {
-  search(String key);
+  searchByKey(String keySearch);
+
+  searchByUserId(String userId);
 
   addNote();
-
-  setCurrentNote(NoteModel note);
-
-  Sink get inputListNotes;
 
   Sink get inputState;
 }
 
 abstract class NoteHomeViewModelOutput {
-  Stream<List<NoteModel>> get outputListNotes;
-
   Stream<StateType> get outputState;
 }
 

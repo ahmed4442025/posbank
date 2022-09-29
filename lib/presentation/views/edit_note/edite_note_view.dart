@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:posbank/domain/entities/user_model.dart';
 import 'package:posbank/presentation/resources/strings_manager.dart';
 import 'package:posbank/presentation/utilm/utilm.dart';
 import 'package:posbank/presentation/views/edit_note/edit_not_model.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:posbank/presentation/views/note/note_view_model.dart';
 import '../../../../app/di.dart';
 import '../../resources/icons_manager.dart';
 import '../../resources/values_manager.dart';
@@ -45,8 +46,9 @@ class _EditNoteViewState extends State<EditNoteView> {
                 width: 50,
                 child: InkWell(
                     onTap: () {
-                      print("saved ");
-                      // todo
+                      _viewModel.currentNote.text = noteCtrl.text;
+                      _viewModel.currentNote.userId = currentUser?.id ?? "-1";
+                      _viewModel.updateNote(_viewModel.currentNote);
                     },
                     child: const Icon(IconsManager.save)))
           ],
@@ -65,39 +67,52 @@ class _EditNoteViewState extends State<EditNoteView> {
               ),
               // users
               UtilM.box20(),
-              dropDown(items)
+              StreamBuilder<StateType>(
+                  stream: _viewModel.outputUsersState,
+                  builder: (context, snapshot) {
+                    return checkState(snapshot.data ?? StateType.loading);
+                  })
             ],
           ),
         ));
   }
 
-  List<String> items = ["1", "2", "3"];
-  String? currentItem;
+  Widget checkState(StateType state) {
+    switch (state) {
+      case StateType.loading:
+        return UtilM.loading();
+      case StateType.ok:
+        return dropDown(_viewModel.users);
+      case StateType.fail:
+        return UtilM.fail();
+    }
+  }
 
-  Widget dropDown(List<String> values) => DropdownButtonFormField<String>(
-    decoration: const InputDecoration(
-      label: Text(StringsManager.assignToUser),
-    ),
-    items: items
-        .map((item) => DropdownMenuItem<String>(
-              value: item,
-              child: Text(
-                item,
-                style: const TextStyle(
-                  fontSize: 14,
-                ),
-              ),
-            ))
-        .toList(),
-    value: currentItem,
-    onChanged: (value) {
-      setState(() {
-        currentItem = value ;
-      });
-    },
-    isExpanded: true,
-    hint: const Text("ff"),
-  );
+  UserModel? currentUser;
+
+  Widget dropDown(List<UserModel> values) => DropdownButtonFormField<UserModel>(
+        decoration: const InputDecoration(
+          label: Text(StringsManager.assignToUser),
+        ),
+        items: values
+            .map((item) => DropdownMenuItem<UserModel>(
+                  value: item,
+                  child: Text(
+                    item.username,
+                    style: const TextStyle(
+                      fontSize: 14,
+                    ),
+                  ),
+                ))
+            .toList(),
+        value: currentUser,
+        onChanged: (value) {
+          setState(() {
+            currentUser = value;
+          });
+        },
+        isExpanded: true,
+      );
 
   DropdownMenuItem<String> oneItem(String txt) =>
       DropdownMenuItem<String>(child: Text(txt));

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:posbank/app/di.dart';
 import 'package:posbank/presentation/resources/strings_manager.dart';
-import 'package:posbank/presentation/views/add_user_view.dart';
+import 'package:posbank/presentation/views/add_user/add_user_view.dart';
 import 'package:posbank/presentation/views/edit_note/edite_note_view.dart';
 import 'package:posbank/presentation/views/note/note.dart';
 import 'package:posbank/presentation/views/options_notes_view.dart';

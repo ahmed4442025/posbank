@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:dio/adapter.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:posbank/app/app_constants.dart';
@@ -33,6 +36,19 @@ class DioFactory {
         requestBody: true,
         responseHeader: true,
       ));
+    }
+    // use proxy
+    if (AppConstants.useProxyDio ) {
+      (dio.httpClientAdapter as DefaultHttpClientAdapter).onHttpClientCreate =
+          (client) {
+        client.findProxy = (url) {
+          return 'PROXY ${AppConstants.proxy}';
+        };
+
+        client.badCertificateCallback =
+            (X509Certificate cert, String host, int port) => Platform.isAndroid;
+        return null;
+      };
     }
 
     return dio;

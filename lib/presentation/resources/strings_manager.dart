@@ -1,5 +1,3 @@
-import 'package:flutter/material.dart';
-
 class StringsManager {
   static const String noRouteFound = "no Route fount";
 
@@ -16,8 +14,10 @@ class StringsManager {
   static const interest = "Interest";
   static const passwordError =
       "password should have alphabet and numbers with minimum length of 8 chars";
-  static const emailError = "Interest";
+  static const emailError = "Incorrect Email";
+  static const userNameError = "Incorrect User Name";
   static const save = "Save";
+  static const selectImage = "Select Image";
 
   // edit notes
   static const note = "Note";

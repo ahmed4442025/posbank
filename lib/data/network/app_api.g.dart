@@ -44,7 +44,7 @@ class _AppServiceClient implements AppServiceClient {
     final _result = await _dio.fetch<List<dynamic>>(
         _setStreamType<List<UserResponse>>(
             Options(method: 'GET', headers: _headers, extra: _extra)
-                .compose(_dio.options, '/notes/getall',
+                .compose(_dio.options, '/users/getall',
                     queryParameters: queryParameters, data: _data)
                 .copyWith(baseUrl: baseUrl ?? _dio.options.baseUrl)));
     var value = _result.data!

@@ -15,7 +15,7 @@ abstract class AppServiceClient {
   @GET(AppConstants.getAllNotes)
   Future<List<NoteResponse>> getAllNotes();
 
-  @GET(AppConstants.getAllNotes)
+  @GET(AppConstants.getAllUsers)
   Future<List<UserResponse>> getAllUsers();
 
   @GET(AppConstants.getAllIntrests)

@@ -22,6 +22,7 @@ class NotesView extends StatefulWidget {
 class _NotesViewState extends State<NotesView> {
   final NoteHomeViewModel _viewModel = instance<NoteHomeViewModel>();
   TextEditingController searchCtrl = TextEditingController();
+  bool showSearchField = true;
 
   @override
   void initState() {
@@ -31,6 +32,7 @@ class _NotesViewState extends State<NotesView> {
 
   bind() {
     _viewModel.start();
+    searchCtrl.addListener(() => _viewModel.searchByKey(searchCtrl.text));
   }
 
   @override
@@ -44,14 +46,14 @@ class _NotesViewState extends State<NotesView> {
                 width: 40,
                 child: InkWell(
                     onTap: () {
-                      // todo
+                      ViewsManager.openAddUserWB(context);
                     },
                     child: Icon(IconsManager.addUser))),
             SizedBox(
                 width: 40,
                 child: InkWell(
                     onTap: () {
-                      // todo
+                      ViewsManager.openOptionsWB(context);
                     },
                     child: Icon(IconsManager.options))),
             SizedBox(
@@ -93,14 +95,7 @@ class _NotesViewState extends State<NotesView> {
         children: [
           searchRow(),
           UtilM.box20(),
-          StreamBuilder<List<NoteModel>>(
-              stream: _viewModel.outputListNotes,
-              builder: (context, snapShot) {
-                print(snapShot.data);
-                return Expanded(
-                  child: notesList(_viewModel.listModel),
-                );
-              }),
+          Expanded(child: notesList(_viewModel.listModel)),
         ],
       ),
     );
@@ -111,28 +106,38 @@ class _NotesViewState extends State<NotesView> {
         padding: const EdgeInsets.symmetric(vertical: AppPadding.p12),
         child: Row(
           children: [
-            const Icon(
-              IconsManager.filterList,
-              color: ColorManager.primary,
+            InkWell(
+              onTap: () => _viewModel.searchByUserId("1"),
+              child: const Icon(
+                IconsManager.filterList,
+                color: ColorManager.primary,
+              ),
             ),
             UtilM.box10(),
-            const Icon(
-              IconsManager.search,
-              color: ColorManager.primary,
+            InkWell(
+              onTap: () {
+                showSearchField = !showSearchField;
+                setState(() {});
+              },
+              child: const Icon(
+                IconsManager.search,
+                color: ColorManager.primary,
+              ),
             ),
             UtilM.box10(),
             // text field search
-            Expanded(
-                child: SizedBox(
-                    height: AppSize.s40,
-                    child: TextField(
-                      controller: searchCtrl,
-                      decoration: InputDecoration(
-                        suffixIcon: InkWell(
-                            onTap: () => searchCtrl.text = "",
-                            child: const Icon(IconsManager.x)),
-                      ),
-                    )))
+            if (showSearchField)
+              Expanded(
+                  child: SizedBox(
+                      height: AppSize.s40,
+                      child: TextField(
+                        controller: searchCtrl,
+                        decoration: InputDecoration(
+                          suffixIcon: InkWell(
+                              onTap: () => searchCtrl.text = "",
+                              child: const Icon(IconsManager.x)),
+                        ),
+                      )))
           ],
         ),
       );
