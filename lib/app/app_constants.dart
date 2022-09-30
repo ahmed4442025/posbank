@@ -1,6 +1,6 @@
 class AppConstants {
   static const bool printDioLog = false;
-  static const bool useProxyDio = true;
+  static const bool useProxyDio = false;
   static const String proxy = '192.168.1.2:8888';
   // image not found base64
   static const String image404B64 =
