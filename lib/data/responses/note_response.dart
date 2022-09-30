@@ -10,7 +10,7 @@ class NoteResponse {
     text = json['text'];
     placeDateTime = json['placeDateTime'];
     userId = json['userId'];
-    id = json['id'];
+    id = json['id'].toString();
   }
 
   Map<String, dynamic> toJson() {

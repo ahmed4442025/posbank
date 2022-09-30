@@ -5,6 +5,10 @@ extension NoteInsertUCInputMapper on NoteInsertUCInput {
   NoteInsertRequest toNetwork() {
     return NoteInsertRequest(text, userId, placeDateTime);
   }
+
+  String toSqlInsert(){
+    return "";
+  }
 }
 
 extension NoteUpdateUCInputMapper on NoteUpdateUCInput {

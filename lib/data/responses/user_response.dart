@@ -20,7 +20,7 @@ class UserResponse {
     email = json['email'];
     imageAsBase64 = json['imageAsBase64'];
     intrestId = json['intrestId'];
-    id = json['id'];
+    id = json['id'].toString();
   }
 
   Map<String, dynamic> toJson() {

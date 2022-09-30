@@ -6,7 +6,7 @@ class InterestResponse {
 
   InterestResponse.fromJson(Map<String, dynamic> json) {
     intrestText = json['intrestText'];
-    id = json['id'];
+    id = json['id'].toString();
   }
 
   Map<String, dynamic> toJson() {
